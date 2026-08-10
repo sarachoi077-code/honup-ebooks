@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 키 완전 입문 — BYOK란 무엇인가 | HONUP Builder</title>
+<meta name="description" content="API 키가 뭔지 몰라도 괜찮습니다. 비개발자 솔로프레너를 위한 BYOK 완전 입문서.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f8f7f4;
+    --surface: #ffffff;
+    --border: #e8e4dc;
+    --text-primary: #1a1916;
+    --text-secondary: #6b6760;
+    --text-muted: #9e9a94;
+    --accent: #1a1916;
+    --accent-warm: #c8622a;
+    --accent-blue: #2563eb;
+    --accent-green: #16a34a;
+    --accent-subtle: #f0ede8;
+    --nav-h: 56px;
+    --slide-max: 760px;
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .top-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--nav-h);
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 100;
+  }
+
+  .nav-brand {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .nav-brand span { color: var(--accent-warm); }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .pdf-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--text-primary);
+    color: white;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 6px;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    border: none;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: opacity 0.15s;
+  }
+
+  .pdf-btn:hover { opacity: 0.8; }
+
+  .page-counter {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+    min-width: 52px;
+    text-align: right;
+  }
+
+  .progress-bar {
+    position: fixed;
+    top: var(--nav-h);
+    left: 0;
+    height: 2px;
+    background: var(--accent-warm);
+    transition: width 0.3s ease;
+    z-index: 99;
+  }
+
+  .slide {
+    display: none;
+    min-height: 100vh;
+    padding: calc(var(--nav-h) + 48px) 24px 100px;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .slide.active { display: flex; }
+
+  .slide-inner {
+    width: 100%;
+    max-width: var(--slide-max);
+  }
+
+  .eyebrow {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  .eyebrow.chapter { color: var(--accent-warm); }
+
+  .cover-tag {
+    display: inline-block;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-warm);
+    border: 1px solid var(--accent-warm);
+    padding: 4px 12px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+  }
+
+  .slide-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: clamp(42px, 8vw, 72px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+  }
+
+  .section-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: clamp(30px, 5vw, 46px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+  }
+
+  .lead-text {
+    font-size: 17px;
+    line-height: 1.75;
+    color: var(--text-secondary);
+    margin-bottom: 28px;
+  }
+
+  .body-text {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+  }
+
+  .cover-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 36px;
+  }
+
+  .big-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 32px 0;
+  }
+
+  .big-stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .big-stat .num {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .big-stat .num.warm { color: var(--accent-warm); }
+  .big-stat .num.blue { color: var(--accent-blue); }
+  .big-stat .num.green { color: var(--accent-green); }
+
+  .big-stat .label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .highlight-box {
+    background: var(--accent-subtle);
+    border-left: 3px solid var(--accent-warm);
+    border-radius: 0 10px 10px 0;
+    padding: 24px 28px;
+    margin: 24px 0;
+  }
+
+  .hl-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-warm);
+    margin-bottom: 10px;
+  }
+
+  .hl-text {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--text-primary);
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin: 24px 0;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 20px;
+  }
+
+  .card.accent-warm { border-top: 3px solid var(--accent-warm); }
+  .card.accent-blue { border-top: 3px solid var(--accent-blue); }
+  .card.accent-green { border-top: 3px solid var(--accent-green); }
+
+  .card-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+  }
+
+  .card p { font-size: 13px; line-height: 1.7; color: var(--text-secondary); }
+
+  .step-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 24px 0;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .step-item {
+    display: flex;
+    gap: 20px;
+    padding: 22px 24px;
+    background: var(--surface);
+    align-items: flex-start;
+  }
+
+  .step-item:not(:last-child) { border-bottom: 1px solid var(--border); }
+
+  .step-num {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--accent-warm);
+    background: #fef3ec;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .step-content h4 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+
+  .step-content p {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 13px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .data-table th {
+    background: var(--accent-subtle);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .data-table td {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+    line-height: 1.5;
+    vertical-align: top;
+  }
+
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:nth-child(even) td { background: #fafaf8; }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 28px 0;
+  }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 28px 0;
+  }
+
+  .summary-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 20px;
+  }
+
+  .summary-item .s-num {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+
+  .summary-item .s-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  .summary-item .s-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .cta-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 28px;
+    margin: 20px 0;
+    text-align: center;
+  }
+
+  .cta-box h3 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+  }
+
+  .cta-box p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    line-height: 1.7;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    background: var(--accent-warm);
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 11px 24px;
+    border-radius: 8px;
+    margin: 4px;
+    transition: opacity 0.15s;
+  }
+
+  .cta-btn:hover { opacity: 0.85; }
+
+  .cta-btn.secondary {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 100px;
+    margin-right: 6px;
+    margin-bottom: 4px;
+  }
+
+  .badge.free { background: #dcfce7; color: #15803d; }
+  .badge.paid { background: #fef9c3; color: #854d0e; }
+  .badge.local { background: #ede9fe; color: #6d28d9; }
+  .badge.caution { background: #fee2e2; color: #991b1b; }
+
+  .service-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    margin: 20px 0;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .service-item {
+    background: var(--surface);
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .service-item:not(:last-child) { border-bottom: 1px solid var(--border); }
+
+  .service-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text-primary);
+  }
+
+  .service-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+  }
+
+  .service-key {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: right;
+    white-space: nowrap;
+    flex-shrink: 0;
+    color: var(--text-secondary);
+  }
+
+  /* 흐름도 */
+  .flow-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 10px 0;
+    flex-wrap: wrap;
+  }
+
+  .flow-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+  }
+
+  .flow-box.highlight {
+    background: var(--accent-warm);
+    color: white;
+    border-color: var(--accent-warm);
+  }
+
+  .flow-box.muted {
+    background: var(--bg);
+    color: var(--text-muted);
+  }
+
+  .flow-arrow {
+    font-size: 18px;
+    color: var(--text-muted);
+  }
+
+  .flow-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    margin-top: 16px;
+  }
+
+  /* FAQ */
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .faq-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 22px;
+  }
+
+  .faq-q {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  .faq-q::before {
+    content: 'Q. ';
+    color: var(--accent-warm);
+  }
+
+  .faq-a {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+  }
+
+  /* 실수 케이스 */
+  .danger-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+  }
+
+  .danger-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    background: var(--surface);
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+
+  .danger-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .danger-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #991b1b;
+    margin-bottom: 4px;
+  }
+
+  .danger-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* 결정 흐름도 */
+  .decision-tree {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 20px 0;
+  }
+
+  .dt-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .dt-row:last-child { margin-bottom: 0; }
+
+  .dt-q {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    flex: 1;
+    padding-top: 2px;
+  }
+
+  .dt-answers {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1.5;
+  }
+
+  .dt-ans {
+    font-size: 12px;
+    color: var(--text-secondary);
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+  }
+
+  .dt-ans strong { color: var(--text-primary); }
+
+  .nav-arrows {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 100;
+  }
+
+  .arrow-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, border-color 0.15s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  .arrow-btn:hover { background: var(--text-primary); color: white; border-color: var(--text-primary); }
+  .arrow-btn:disabled { opacity: 0.3; cursor: default; }
+  .arrow-btn:disabled:hover { background: var(--surface); color: var(--text-primary); border-color: var(--border); }
+
+  @media (max-width: 600px) {
+    .slide { padding: 40px 16px 80px; padding-top: calc(var(--nav-h) + 32px); }
+    .big-stat-grid { grid-template-columns: 1fr 1fr; }
+    .card-grid { grid-template-columns: 1fr; }
+    .summary-grid { grid-template-columns: 1fr; }
+    .top-nav { padding: 0 16px; }
+    .highlight-box { padding: 20px 18px; }
+    .flow-row { flex-direction: column; align-items: flex-start; }
+  }
+
+  @media print {
+    .top-nav, .nav-arrows, .progress-bar { display: none; }
+    .slide { display: flex !important; min-height: auto; padding: 40px; page-break-after: always; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a class="nav-brand" href="#">HONUP Builder™ <span>·</span> BYOK 완전 입문서</a>
+  <div class="nav-right">
+    <a href="https://honupbuilder.mariacamp.com" class="pdf-btn" style="background:transparent;color:var(--text-primary);border:1px solid var(--border);">← 홈으로</a>
+    <button class="pdf-btn" onclick="window.print()">📄 PDF 저장</button>
+    <span class="page-counter" id="pageCounter">1 / 24</span>
+  </div>
+</nav>
+
+<div class="progress-bar" id="progressBar" style="width: 4.17%"></div>
+
+<!-- ═══ SLIDE 01 — 표지 ═══ -->
+<div class="slide active" id="slide-1">
+  <div class="slide-inner">
+    <div class="cover-tag">AI 키 완전 입문 · HONUP Builder 가이드 v2.0</div>
+    <h1 class="slide-title">내 키를<br>쓴다는 것</h1>
+    <p class="lead-text">
+      <strong>BYOK — Bring Your Own Key.</strong><br>
+      "내 키를 직접 가져다 쓴다"는 뜻입니다.<br>
+      API 키가 뭔지 몰라도 괜찮습니다. 처음부터 설명합니다.
+    </p>
+    <div class="big-stat-grid">
+      <div class="big-stat">
+        <span class="num warm">0원</span>
+        <span class="label">로컬 AI 실행 비용<br>내 컴퓨터가 서버</span>
+      </div>
+      <div class="big-stat">
+        <span class="num blue">6장</span>
+        <span class="label">개념부터 실습까지<br>단계별 안내</span>
+      </div>
+      <div class="big-stat">
+        <span class="num green">5분</span>
+        <span class="label">첫 번째 키를<br>받는 데 걸리는 시간</span>
+      </div>
+    </div>
+    <p class="cover-meta">© 2026 HONUP Builder™ — 비개발자 솔로프레너를 위한 BYOK 완전 입문서</p>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 02 — BYOK 약자 정의 ═══ -->
+<div class="slide" id="slide-2">
+  <div class="slide-inner">
+    <div class="eyebrow chapter">0장 · 시작 전에 — BYOK가 뭔가요?</div>
+    <h2 class="section-title">B·Y·O·K<br>한 글자씩 풀면</h2>
+    <div class="card-grid" style="grid-template-columns: repeat(4,1fr); gap: 10px;">
+      <div class="card" style="text-align:center; border-top: 3px solid var(--accent-warm);">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:32px; font-weight:900; color:var(--accent-warm); margin-bottom:8px;">B</div>
+        <div style="font-size:13px; font-weight:700; color:var(--text-primary);">Bring</div>
+        <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">가져온다</div>
+      </div>
+      <div class="card" style="text-align:center; border-top: 3px solid var(--accent-blue);">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:32px; font-weight:900; color:var(--accent-blue); margin-bottom:8px;">Y</div>
+        <div style="font-size:13px; font-weight:700; color:var(--text-primary);">Your</div>
+        <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">내 것을</div>
+      </div>
+      <div class="card" style="text-align:center; border-top: 3px solid var(--accent-green);">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:32px; font-weight:900; color:var(--accent-green); margin-bottom:8px;">O</div>
+        <div style="font-size:13px; font-weight:700; color:var(--text-primary);">Own</div>
+        <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">직접 소유한</div>
+      </div>
+      <div class="card" style="text-align:center; border-top: 3px solid #7c3aed;">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:32px; font-weight:900; color:#7c3aed; margin-bottom:8px;">K</div>
+        <div style="font-size:13px; font-weight:700; color:var(--text-primary);">Key</div>
+        <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">키(출입증)</div>
+      </div>
+    </div>
+    <div class="highlight-box">
+      <div class="hl-title">한 줄 정의</div>
+      <div class="hl-text">
+        <strong>내가 직접 발급받은 AI 키를, 내가 직접 서비스에 넣어서 쓴다.</strong><br>
+        서비스가 AI 비용을 대신 내는 게 아니라, 내가 직접 AI사에 내는 방식입니다.
+      </div>
+    </div>
+    <p class="body-text">
+      이 이북은 BYOK가 왜 필요한지, 어떻게 키를 받는지, 어떤 서비스에서 쓸 수 있는지를 순서대로 설명합니다.
+    </p>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 03 — 일반 AI 구독 vs BYOK 구도 ═══ -->
+<div class="slide" id="slide-3">
+  <div class="slide-inner">
+    <div class="eyebrow chapter">1장 · AI 키, 이게 뭔가요?</div>
+    <h2 class="section-title">ChatGPT 구독 vs<br>BYOK — 무엇이 다른가</h2>
+    <div class="flow-label">일반 AI 구독 (예: ChatGPT Plus $20/월)</div>
+    <div class="flow-row">
+      <div class="flow-box">내가 요청</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">서비스 서버</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box highlight">서비스 AI 키</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">AI 응답</div>
+    </div>
+    <p class="body-text" style="margin-top:4px; font-size:13px;">서비스가 AI 비용을 부담 → 구독료에 포함해서 청구. 내가 얼마나 쓰는지 통제 불가.</p>
+
+    <div class="flow-label" style="margin-top:24px;">BYOK 서비스 (예: WonGuardian + 내 Claude 키)</div>
+    <div class="flow-row">
+      <div class="flow-box">내가 요청</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box muted">서비스 서버</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box highlight">내 AI 키</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">AI 응답</div>
+    </div>
+    <p class="body-text" style="margin-top:4px; font-size:13px;">내 키로 AI사에 직접 연결 → 서비스에 구독료 없음. 실사용량만큼만 AI사에 직접 납부.<br><span style="color:var(--text-muted); font-size:12px;">* LORITN·WonGuardian 같은 브라우저 직접 연결 방식은 서비스 서버를 실질적으로 경유하지 않습니다.</span></p>
+
+    <div class="highlight-box">
+      <div class="hl-title">핵심 차이</div>
+      <div class="hl-text">
+        구독 서비스는 <strong>"무제한처럼 보이지만" 실은 $20짜리 풀</strong>을 나눠 씁니다.<br>
+        BYOK는 내가 직접 수도꼭지를 열고 닫습니다. 쓴 만큼만 냅니다.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 04 — API 키 = 전용 출입증 ═══ -->
+<div class="slide" id="slide-4">
+  <div class="slide-inner">
+    <div class="eyebrow chapter">1장 · AI 키, 이게 뭔가요?</div>
+    <h2 class="section-title">식당 회원카드와<br>같습니다</h2>
+    <p class="lead-text">
+      어려운 말로는 <strong>API 키(API Key)</strong>라고 부릅니다.<br>
+      그냥 <strong>내 전용 출입증</strong>이라고 생각하면 됩니다.
+    </p>
+    <div class="highlight-box">
+      <div class="hl-title">비유</div>
+      <div class="hl-text">
+        단골 식당에 <strong>회원카드</strong>를 내밀면<br>
+        "아, 이 손님이구나" 하고 알아봅니다.<br>
+        AI 서비스도 똑같습니다.<br>
+        키를 보여주면 <strong>"이 사람이 요청한 거구나"</strong> 하고 처리해 줍니다.
+      </div>
+    </div>
+    <p class="body-text">
+      회원카드가 있어야 혜택을 받듯, AI 서비스도 키가 있어야 사용할 수 있습니다.
+      키는 보통 알파벳·숫자가 섞인 긴 문자열입니다.
+    </p>
+    <div class="card-grid">
+      <div class="card accent-warm">
+        <h3 class="card-title">키의 생김새</h3>
+        <p style="font-family: monospace; font-size: 12px; word-break: break-all; color: var(--accent-warm);">sk-ant-api03-abc123xyz...</p>
+        <p style="margin-top: 8px;">이런 긴 문자열입니다. 외울 필요 없고, 복사해서 쓰면 됩니다.</p>
+      </div>
+      <div class="card accent-blue">
+        <h3 class="card-title">어디서 발급받나</h3>
+        <p>각 AI 회사(Anthropic, OpenAI, Google)의 개발자 콘솔 사이트에서 직접 발급받습니다.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 05 — 키가 곧 계량기 ═══ -->
+<div class="slide" id="slide-5">
+  <div class="slide-inner">
+    <div class="eyebrow chapter">1장 · AI 키, 이게 뭔가요?</div>
+    <h2 class="section-title">키가 곧<br>내 계량기</h2>
+    <p class="lead-text">
+      전기 계량기처럼, AI 키에는 <strong>내가 얼마나 썼는지</strong>가 기록됩니다.
+    </p>
+    <div class="card-grid">
+      <div class="card accent-warm">
+        <h3 class="card-title">요금 추적</h3>
+        <p>내 키로 사용한 만큼만 청구됩니다. 다른 사람 사용량과 섞이지 않습니다.</p>
+      </div>
+      <div class="card accent-blue">
+        <h3 class="card-title">사용량 제어</h3>
+        <p>월 한도를 직접 설정할 수 있습니다. 한도를 넘으면 자동으로 멈춥니다.</p>
+      </div>
+      <div class="card accent-green">
+        <h3 class="card-title">서비스 분리</h3>
+        <p>프로젝트별로 키를 따로 만들 수 있습니다. 어떤 서비스가 얼마나 썼는지 추적 가능.</p>
+      </div>
+    </div>
+    <hr class="divider">
+    <p class="body-text">
+      키는 내 AI 계정과 연결된 고유 코드입니다. BYOK 서비스에 이 키를 입력하면,
+      해당 서비스를 통해 AI를 쓸 때 요금이 <strong>내 계정으로 직접 청구</strong>됩니다.
+    </p>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 06 — 왜 BYOK를 써야 하나 3가지 이유 ═══ -->
+<div class="slide" id="slide-6">
+  <div class="slide-inner">
+    <div class="eyebrow chapter">2장 · 왜 내 키를 써야 하나요?</div>
+    <h2 class="section-title">3가지 이유</h2>
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>비용을 직접 통제한다</h4>
+          <p>서비스가 AI 비용을 대신 내면, 그 비용은 구독료나 프리미엄 요금으로 청구됩니다.
+          내 키를 쓰면 실제 사용한 만큼만 AI사에 직접 냅니다. 가볍게 쓰는 달엔 $1도 안 나올 수 있습니다.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>내 데이터가 서비스 서버를 거치지 않는다</h4>
+          <p>LORITN·WonGuardian 같은 브라우저 직접 연결 방식의 BYOK 서비스는 대화 내용을 자체 서버에 저장하지 않습니다.
+          키와 대화가 내 브라우저에서 AI사로 직접 전송됩니다. 민감한 사업 내용을 다룰 때 특히 중요합니다.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>모델을 내가 고른다</h4>
+          <p>Claude, GPT-4o, Gemini 중 어떤 모델을 쓸지 직접 선택할 수 있습니다.
+          서비스가 임의로 저렴한 모델로 교체할 수 없습니다. 내 작업에 맞는 모델을 직접 결정합니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 07 — 실제 비용 감각 (숫자로) ═══ -->
+<div class="slide" id="slide-7">
+  <div class="slide-inner">
+    <div class="eyebrow chapter">2장 · 왜 내 키를 써야 하나요?</div>
+    <h2 class="section-title">실제로 얼마나<br>나오나요?</h2>
+    <p class="body-text">하루 30분 AI를 쓰는 솔로프레너 기준 추정 시나리오입니다.</p>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>방식</th>
+          <th>결제 구조</th>
+          <th>월 예상 비용</th>
+          <th>통제권</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>ChatGPT Plus</td>
+          <td>월정액 고정</td>
+          <td>$20/월 (~₩28,000)</td>
+          <td>없음</td>
+        </tr>
+        <tr>
+          <td>Claude Pro</td>
+          <td>월정액 고정</td>
+          <td>$20/월 (~₩28,000)</td>
+          <td>없음</td>
+        </tr>
+        <tr>
+          <td><strong>BYOK — Claude Haiku</strong></td>
+          <td>사용량 비례</td>
+          <td><strong>$1~3/월</strong></td>
+          <td><strong>완전 통제</strong></td>
+        </tr>
+        <tr>
+          <td><strong>BYOK — Gemini Flash</strong></td>
+          <td>사용량 비례</td>
+          <td><strong>$0.5~2/월</strong></td>
+          <td><strong>완전 통제</strong></td>
+        </tr>
+        <tr>
+          <td>로컬 AI (LM Studio)</td>
+          <td>없음</td>
+          <td><strong>$0 (영구)</strong></td>
+          <td><strong>완전 통제</strong></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="body-text" style="font-size:12px; color:var(--text-muted);">
+      * BYOK 비용은 모델·사용량에 따라 다릅니다. 위 수치는 일반적인 텍스트 작업 기준 추정치입니다.
+      헤비 유저(하루 2시간+)는 더 높을 수 있습니다.
+    </p>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 08 — 토큰 개념과 실단가 ═══ -->
+<div class="slide" id="slide-8">
+  <div class="slide-inner">
+    <div class="eyebrow chapter">2장 · 왜 내 키를 써야 하나요?</div>
+    <h2 class="section-title">토큰이 뭔가요?<br>요금은 어떻게 계산되나요?</h2>
+    <div class="highlight-box">
+      <div class="hl-title">토큰 = AI의 단위</div>
+      <div class="hl-text">
+        AI는 텍스트를 <strong>토큰(token)</strong> 단위로 처리합니다.<br>
+        한국어는 영어보다 토큰을 더 많이 씁니다 (모델마다 차이 있음)<br>
+        A4 1장 분량 ≈ 약 500~1,000토큰 (언어·모델에 따라 다름)
+      </div>
+    </div>
+    <p class="body-text">AI사는 토큰 수에 따라 요금을 청구합니다. 주요 모델 단가 비교:</p>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>모델</th>
+          <th>입력 (1M토큰)</th>
+          <th>출력 (1M토큰)</th>
+          <th>특징</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Claude Haiku</td>
+          <td>$0.80~</td>
+          <td>$4.00~</td>
+          <td>빠르고 저렴, 일상 작업 최적</td>
+        </tr>
+        <tr>
+          <td>GPT-4o mini</td>
+          <td>$0.15~</td>
+          <td>$0.60~</td>
+          <td>저렴한 고성능 옵션</td>
+        </tr>
+        <tr>
+          <td>Gemini Flash</td>
+          <td>$0.10~</td>
+          <td>$0.40~</td>
+          <td>무료 티어 있음, 시작하기 좋음</td>
+        </tr>
+        <tr>
+          <td>Claude Sonnet</td>
+          <td>$3.00~</td>
+          <td>$15.00~</td>
+          <td>고성능, 복잡한 분석·코드</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="body-text" style="font-size:12px; color:var(--text-muted);">
+      * 단가는 변경될 수 있습니다. 실제 요금은 각 AI사 콘솔에서 확인하세요.
+    </p>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 09 — 어떤 키를 먼저 받아야 하나 결정 가이드 ═══ -->
+<div class="slide" id="slide-9">
+  <div class="slide-inner">
+    <div class="eyebrow chapter">3장 · 클라우드 AI 키 받는 법</div>
+    <h2 class="section-title">나는 어떤 키를<br>먼저 받아야 할까?</h2>
+    <p class="body-text">아래 질문에 따라 시작점을 결정하세요.</p>
+    <div class="decision-tree">
+      <div class="dt-row">
+        <div class="dt-q">💰 지금 당장 비용을 내고 싶지 않다</div>
+        <div class="dt-answers">
+          <div class="dt-ans">→ <strong>Gemini AI Studio 무료 키</strong>로 시작<br><span style="font-size:11px;">aistudio.google.com — 무료 티어 있음</span></div>
+        </div>
+      </div>
+      <div class="dt-row">
+        <div class="dt-q">📝 긴 문서 분석, 깊은 사고가 필요한 작업이 많다</div>
+        <div class="dt-answers">
+          <div class="dt-ans">→ <strong>Anthropic (Claude)</strong> 키 추천<br><span style="font-size:11px;">console.anthropic.com — 소액 충전 후 사용</span></div>
+        </div>
+      </div>
+      <div class="dt-row">
+        <div class="dt-q">💻 코드 작성, 기술적 작업이 주된 용도다</div>
+        <div class="dt-answers">
+          <div class="dt-ans">→ <strong>OpenAI (GPT-4o mini)</strong> 키 추천<br><span style="font-size:11px;">platform.openai.com — 소액 충전 후 사용</span></div>
+        </div>
+      </div>
+      <div class="dt-row">
+        <div class="dt-q">🔒 인터넷 없이 쓰거나, 데이터를 외부로 내보내기 싫다</div>
+        <div class="dt-answers">
+          <div class="dt-ans">→ <strong>LM Studio (로컬 AI)</strong><br><span style="font-size:11px;">키 없음, 내 컴퓨터에서 실행, 완전 무료</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="highlight-box">
+      <div class="hl-title">HONUP Builder 추천 시작 순서</div>
+      <div class="hl-text">
+        <strong>① Gemini 무료 키로 먼저 감 잡기 → ② 익숙해지면 Claude Haiku 키 추가</strong><br>
+        둘 다 발급받아서 용도에 따라 나눠 쓰는 것이 실용적입니다.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 10 — 3대 AI사 키 발급 개요 ═══ -->
+<div class="slide" id="slide-10">
+  <div class="slide-inner">
+    <div class="eyebrow chapter">3장 · 클라우드 AI 키 받는 법</div>
+    <h2 class="section-title">3대 AI사<br>키 발급 안내</h2>
+    <p class="lead-text">
+      각 AI사 홈페이지에서 직접 발급받습니다.<br>
+      <strong>회원가입 후 5분이면 완료됩니다.</strong>
+    </p>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>AI사</th>
+          <th>대표 모델</th>
+          <th>무료 시작</th>
+          <th>발급 주소</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Anthropic</strong></td>
+          <td>Claude Haiku · Sonnet</td>
+          <td>❌ 선불 충전 필요</td>
+          <td><a href="https://console.anthropic.com" target="_blank" style="color:var(--accent-blue);text-decoration:underline;">console.anthropic.com</a></td>
+        </tr>
+        <tr>
+          <td><strong>OpenAI</strong></td>
+          <td>GPT-4o · GPT-4o mini</td>
+          <td>❌ 선불 충전 필요</td>
+          <td><a href="https://platform.openai.com" target="_blank" style="color:var(--accent-blue);text-decoration:underline;">platform.openai.com</a></td>
+        </tr>
+        <tr>
+          <td><strong>Google</strong></td>
+          <td>Gemini Flash · Pro</td>
+          <td>✅ 무료 티어 있음</td>
+          <td><a href="https://aistudio.google.com" target="_blank" style="color:var(--accent-blue);text-decoration:underline;">aistudio.google.com</a></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="highlight-box">
+      <div class="hl-title">처음 충전 금액</div>
+      <div class="hl-text">
+        Anthropic·OpenAI 모두 <strong>소액 선불 충전</strong> 후 사용합니다.<br>
+        $5~$10 충전으로 수개월 사용 가능합니다 (가벼운 사용 기준).
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 11 — Anthropic 키 발급 단계 ═══ -->
+<div class="slide" id="slide-11">
+  <div class="slide-inner">
+    <div class="eyebrow chapter">3장 · 클라우드 AI 키 받는 법</div>
+    <h2 class="section-title">Anthropic (Claude)<br>키 발급 순서</h2>
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>console.anthropic.com 접속</h4>
+          <p>Google 계정 또는 이메일로 가입합니다. 이메일 인증 완료 후 진행.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>결제 수단 등록 및 크레딧 충전</h4>
+          <p>Settings → Billing에서 신용카드를 등록하고 $5 이상 충전합니다. 카드 정보는 암호화 보관됩니다.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>API Keys 메뉴에서 키 생성</h4>
+          <p>좌측 메뉴 → API Keys → "Create Key" 버튼 클릭. 키 이름을 "byok-test" 같이 알아보기 쉽게 입력합니다.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>키 복사 후 안전하게 보관</h4>
+          <p>생성 직후 한 번만 전체가 표시됩니다. 반드시 복사해서 메모장 등에 저장하세요. 다시 볼 수 없습니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 12 — 키 보안 3원칙 ═══ -->
+<div class="slide" id="slide-12">
+  <div class="slide-inner">
+    <div class="eyebrow chapter">3장 · 클라우드 AI 키 받는 법</div>
+    <h2 class="section-title">키 관리<br>3가지 원칙</h2>
+    <p class="lead-text">키는 <strong>비밀번호보다 더 조심</strong>해야 합니다.<br>유출되면 내 돈이 나갑니다.</p>
+    <div class="card-grid">
+      <div class="card accent-warm">
+        <h3 class="card-title">🔒 절대 공유 금지</h3>
+        <p>카카오톡, 이메일, 노션 공개 페이지에 키를 붙여넣지 마세요. 캡처 이미지도 위험합니다.</p>
+      </div>
+      <div class="card accent-blue">
+        <h3 class="card-title">💰 월 한도 설정</h3>
+        <p>각 AI사 콘솔에서 월 지출 한도를 설정하세요. 혹시 유출되어도 피해를 제한할 수 있습니다.</p>
+      </div>
+      <div class="card accent-green">
+        <h3 class="card-title">🔄 의심되면 즉시 교체</h3>
+        <p>키가 노출된 것 같다면 즉시 기존 키를 삭제하고 새 키를 발급하세요. 비용이 들지 않습니다.</p>
+      </div>
+    </div>
+    <div class="highlight-box" style="background: #fef2f2; border-left-color: #ef4444;">
+      <div class="hl-title" style="color: #991b1b;">주의</div>
+      <div class="hl-text" style="color: #7f1d1d;">
+        GitHub, 노션 공개 페이지, 블로그 코드 등에<br>
+        키를 그대로 올리면 <strong>수십만 원의 피해</strong>가 발생한 사례가 있습니다.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 13 — 보안 실수 사례 구체적으로 ═══ -->
+<div class="slide" id="slide-13">
+  <div class="slide-inner">
+    <div class="eyebrow chapter">3장 · 클라우드 AI 키 받는 법</div>
+    <h2 class="section-title">실제 실수 사례<br>3가지</h2>
+    <p class="body-text">이런 실수가 가장 많이 발생합니다. 미리 알아두면 피할 수 있습니다.</p>
+    <div class="danger-list">
+      <div class="danger-item">
+        <div class="danger-icon">📋</div>
+        <div>
+          <div class="danger-title">노션 공개 페이지에 붙여넣기</div>
+          <div class="danger-desc">메모하려고 노션에 키를 저장했는데, 그 페이지가 "공개"로 설정돼 있었던 경우. 봇이 자동으로 수집해서 수십만 원이 청구된 사례 다수.</div>
+        </div>
+      </div>
+      <div class="danger-item">
+        <div class="danger-icon">💻</div>
+        <div>
+          <div class="danger-title">GitHub에 코드와 함께 올리기</div>
+          <div class="danger-desc">프로젝트 코드에 키를 직접 써넣고 GitHub에 push한 경우. GitHub이 자동으로 키를 감지하긴 하지만, 감지 전에 이미 수집되는 경우도 있음.</div>
+        </div>
+      </div>
+      <div class="danger-item">
+        <div class="danger-icon">💬</div>
+        <div>
+          <div class="danger-title">카카오톡·슬랙으로 공유</div>
+          <div class="danger-desc">팀원이나 지인에게 임시로 키를 전달하려고 메신저로 보낸 경우. 채팅 기록이 유출되거나 단체방에 잘못 올라간 사례.</div>
+        </div>
+      </div>
+    </div>
+    <div class="highlight-box">
+      <div class="hl-title">유출됐을 때 즉시 행동 순서</div>
+      <div class="hl-text">
+        <strong>① 콘솔 접속 → ② 해당 키 즉시 삭제 → ③ 새 키 발급</strong><br>
+        삭제하면 그 키로는 더 이상 요금이 청구되지 않습니다. 패닉하지 말고 순서대로.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 14 — 로컬 AI 개념 ═══ -->
+<div class="slide" id="slide-14">
+  <div class="slide-inner">
+    <div class="eyebrow chapter">4장 · 로컬 AI — 키 없이 0원으로 쓰는 법</div>
+    <h2 class="section-title">내 컴퓨터가<br>곧 서버</h2>
+    <div class="big-stat-grid" style="grid-template-columns: 1fr 1fr;">
+      <div class="big-stat">
+        <span class="num warm">0원</span>
+        <span class="label">API 비용<br>영원히</span>
+      </div>
+      <div class="big-stat">
+        <span class="num blue">인터넷<br>없어도</span>
+        <span class="label">작동합니다<br>완전 로컬</span>
+      </div>
+    </div>
+    <p class="lead-text">
+      클라우드 AI는 인터넷을 통해 외부 서버에서 처리합니다.<br>
+      <strong>로컬 AI는 내 컴퓨터 안에서 직접 처리합니다.</strong>
+    </p>
+    <div class="highlight-box">
+      <div class="hl-title">핵심 차이</div>
+      <div class="hl-text">
+        클라우드: 인터넷 → AI사 서버 → 응답 (요금 발생)<br>
+        로컬: <strong>내 컴퓨터 → 바로 응답 (비용 없음)</strong><br><br>
+        단, 내 컴퓨터 성능이 낮으면 응답이 느릴 수 있습니다.
+      </div>
+    </div>
+    <p class="body-text">
+      민감한 정보를 다루거나, AI 비용을 아예 없애고 싶다면 로컬 AI가 최선입니다.
+      <strong>LM Studio</strong>라는 무료 앱으로 클릭 몇 번이면 설치됩니다.
+    </p>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 15 — LM Studio 설치 ═══ -->
+<div class="slide" id="slide-15">
+  <div class="slide-inner">
+    <div class="eyebrow chapter">4장 · 로컬 AI — LM Studio</div>
+    <h2 class="section-title">LM Studio<br>4단계로 시작</h2>
+    <p class="body-text">코드 한 줄 없이 클릭만으로 로컬 AI를 실행합니다.</p>
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>lmstudio.ai에서 무료 설치</h4>
+          <p>Windows·Mac 모두 지원합니다. 설치 파일 약 400MB. 단, 모델은 별도로 수~수십 GB 추가 다운로드가 필요합니다. 넉넉한 저장 공간을 확인하세요.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>모델 선택 · 내려받기</h4>
+          <p>검색창에서 모델을 골라 다운로드합니다. 내 RAM에 맞는 크기를 선택하세요.<br>
+          RAM 8GB → 7B 이하 / RAM 16GB → 13B 이하 권장. 처음엔 <strong>Llama 3.1 8B</strong>를 추천합니다.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Developer 탭 → "Start Server" 클릭</h4>
+          <p>LM Studio가 내 컴퓨터 안에 AI 서버를 엽니다. 주소는 <strong>http://localhost:1234</strong>입니다.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>BYOK 서비스에 주소 입력</h4>
+          <p>WonGuardian 같은 BYOK 서비스의 설정창에 http://localhost:1234를 입력하면 연결 완료. 인터넷 없이 작동합니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 16 — 클라우드 vs 로컬 비교 ═══ -->
+<div class="slide" id="slide-16">
+  <div class="slide-inner">
+    <div class="eyebrow chapter">4장 · 로컬 AI — LM Studio</div>
+    <h2 class="section-title">클라우드 AI vs<br>로컬 AI</h2>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>클라우드 AI (BYOK)</th>
+          <th>로컬 AI (LM Studio)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>비용</td>
+          <td>사용량 비례 과금</td>
+          <td><strong>0원 (영구)</strong></td>
+        </tr>
+        <tr>
+          <td>인터넷</td>
+          <td>필요</td>
+          <td><strong>없어도 됨</strong></td>
+        </tr>
+        <tr>
+          <td>응답 속도</td>
+          <td>빠름</td>
+          <td>내 PC 성능에 따라</td>
+        </tr>
+        <tr>
+          <td>모델 성능</td>
+          <td><strong>최신 고성능</strong></td>
+          <td>중간 수준 (개인 PC 한계)</td>
+        </tr>
+        <tr>
+          <td>데이터 보안</td>
+          <td>AI사 서버로 전송</td>
+          <td><strong>100% 로컬, 외부 전송 없음</strong></td>
+        </tr>
+        <tr>
+          <td>설치 난이도</td>
+          <td>키 발급만 하면 됨</td>
+          <td>LM Studio 설치 + 모델 다운로드</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="body-text">
+      처음 시작은 <strong>로컬 AI로 부담 없이 연습</strong>하고,
+      성능이 필요한 작업은 <strong>클라우드 AI 키</strong>를 쓰는 것이 실용적입니다.
+    </p>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 17 — 용도별 모델 선택 가이드 ═══ -->
+<div class="slide" id="slide-17">
+  <div class="slide-inner">
+    <div class="eyebrow chapter">5장 · 모델 선택 가이드</div>
+    <h2 class="section-title">어떤 AI를<br>어떤 작업에 쓸까?</h2>
+    <p class="body-text">모델마다 강점이 다릅니다. 작업 유형에 맞게 고르면 비용과 성능 모두 잡을 수 있습니다.</p>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>작업 유형</th>
+          <th>추천 모델</th>
+          <th>이유</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>긴 문서 분석·요약</td>
+          <td><strong>Claude Sonnet</strong></td>
+          <td>긴 컨텍스트 처리 능력 최강</td>
+        </tr>
+        <tr>
+          <td>일상 글쓰기·아이디어</td>
+          <td><strong>Claude Haiku / GPT-4o mini</strong></td>
+          <td>빠르고 저렴, 충분한 품질</td>
+        </tr>
+        <tr>
+          <td>코드 작성·디버깅</td>
+          <td><strong>GPT-4o / Claude Sonnet</strong></td>
+          <td>코드 이해·생성 특화</td>
+        </tr>
+        <tr>
+          <td>무료로 시작</td>
+          <td><strong>Gemini 2.0 Flash</strong></td>
+          <td>무료 티어로 충분한 성능</td>
+        </tr>
+        <tr>
+          <td>오프라인·보안 중요</td>
+          <td><strong>LM Studio (로컬)</strong></td>
+          <td>인터넷 없음, 외부 전송 없음</td>
+        </tr>
+        <tr>
+          <td>이미지 분석 포함</td>
+          <td><strong>GPT-4o / Claude Sonnet</strong></td>
+          <td>멀티모달 지원</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="highlight-box">
+      <div class="hl-title">절약 팁</div>
+      <div class="hl-text">
+        초안·아이디어는 <strong>Haiku/Flash(저렴)</strong>로, 최종 검토·중요 분석은 <strong>Sonnet(고성능)</strong>으로 나눠 쓰면 비용을 크게 줄일 수 있습니다.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 18 — BYOK 서비스 소개 개요 ═══ -->
+<div class="slide" id="slide-18">
+  <div class="slide-inner">
+    <div class="eyebrow chapter">6장 · 실제로 어떻게 쓰나요?</div>
+    <h2 class="section-title">키를 넣는<br>방법은 같습니다</h2>
+    <p class="lead-text">
+      서비스마다 UI가 조금 다르지만,<br>
+      <strong>설정창에 키를 붙여넣는다는 과정은 동일합니다.</strong>
+    </p>
+    <div class="service-list">
+      <div class="service-item">
+        <div>
+          <div class="service-name">① LORITN</div>
+          <div class="service-desc">창업 아이디어 발굴 도구 · BYOK 전용</div>
+        </div>
+        <div class="service-key">
+          <span class="badge free">무료</span><br>
+          Claude / GPT / Gemini / LM Studio
+        </div>
+      </div>
+      <div class="service-item">
+        <div>
+          <div class="service-name">② Vibe2Spec AI</div>
+          <div class="service-desc">아이디어 한 줄 → AI 개발 지시서 변환 · 스펙 1회 무료 / Starter $19 · Bundle $29</div>
+        </div>
+        <div class="service-key">
+          <span class="badge free">무료+유료</span><br>
+          Claude / GPT / Gemini / LM Studio
+        </div>
+      </div>
+      <div class="service-item">
+        <div>
+          <div class="service-name">③ WonGuardian</div>
+          <div class="service-desc">AI 개발 파트너 · 아이디어→배포 전 과정 점검</div>
+        </div>
+        <div class="service-key">
+          <span class="badge free">무료</span><br>
+          Claude / GPT / Gemini / LM Studio
+        </div>
+      </div>
+      <div class="service-item">
+        <div>
+          <div class="service-name">④ ImGuardian Pro</div>
+          <div class="service-desc">서비스 출시 전 전문 보안 감사</div>
+        </div>
+        <div class="service-key">
+          <span class="badge paid">유료</span><br>
+          BYOK 포함 플랜 있음
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 19 — LORITN 실사용 예시 ═══ -->
+<div class="slide" id="slide-19">
+  <div class="slide-inner">
+    <div class="eyebrow chapter">6장 · 실제로 어떻게 쓰나요?</div>
+    <h2 class="section-title">LORITN<br>BYOK 연결 순서</h2>
+    <p class="body-text">퍼널의 시작점. 내 경험과 강점에서 창업 아이디어를 발굴하는 서비스입니다.</p>
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>loritn.mutrasite.com 접속</h4>
+          <p>별도 회원가입 없이 바로 사용합니다. 입력한 키는 내 브라우저에만 저장되며 서버로 전송되지 않습니다.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>API 설정에서 AI 선택 후 키 입력</h4>
+          <p>Claude, GPT, Gemini 중 선택하거나 LM Studio 주소(http://localhost:1234)를 입력합니다. 무료로 시작하려면 Gemini 키 또는 LM Studio를 추천합니다.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>내 경험·관심사 입력 후 아이디어 발굴</h4>
+          <p>AI가 내 배경을 분석해서 현실적인 창업 아이디어를 제안합니다. 마음에 드는 아이디어가 나오면 다음 단계로 이동합니다.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>Vibe2Spec AI로 이동 → 지시서 생성</h4>
+          <p>아이디어가 확정되면 Vibe2Spec AI에서 AI 개발 지시서로 변환합니다. 퍼널의 다음 단계입니다.</p>
+        </div>
+      </div>
+    </div>
+    <div class="highlight-box">
+      <div class="hl-title">중요 — 키 저장 위치</div>
+      <div class="hl-text">
+        키는 <strong>내 브라우저 저장소(localStorage)에만</strong> 보관됩니다.<br>
+        서비스 서버로 전송되거나 저장되지 않습니다. 브라우저를 바꾸면 다시 입력해야 합니다.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 20 — 키 여러 개 관리 팁 ═══ -->
+<div class="slide" id="slide-20">
+  <div class="slide-inner">
+    <div class="eyebrow chapter">6장 · 실제로 어떻게 쓰나요?</div>
+    <h2 class="section-title">키 여러 개,<br>어떻게 관리하나요?</h2>
+    <p class="body-text">Claude·GPT·Gemini 키를 모두 발급받으면 관리가 복잡해 보입니다. 실용적인 방법을 소개합니다.</p>
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>키는 용도별로 이름 붙여서 발급</h4>
+          <p>하나의 AI사 계정에서 키를 여러 개 만들 수 있습니다. "wonguardian-key", "vibe2spec-key" 처럼 이름을 붙이면 어디서 얼마나 쓰는지 추적하기 좋습니다.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>비밀번호 관리앱에 보관</h4>
+          <p>1Password, Bitwarden, Apple 키체인 같은 앱에 저장하세요. 메모장·카카오톡·노션 공개페이지는 절대 금지.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>키 하나당 월 한도를 설정</h4>
+          <p>각 AI사 콘솔의 Billing 메뉴에서 월 지출 한도를 설정합니다. 예: 월 $5 한도. 이 금액을 넘으면 자동 중지됩니다.</p>
+        </div>
+      </div>
+    </div>
+    <div class="highlight-box">
+      <div class="hl-title">키 여러 개 써도 되나요?</div>
+      <div class="hl-text">
+        <strong>됩니다.</strong> 클라우드 AI 키(Claude+Gemini)를 여러 BYOK 서비스에 같이 써도 됩니다.<br>
+        요금은 각 키별로 합산 청구됩니다. 서비스끼리 간섭하지 않습니다.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 21 — FAQ ═══ -->
+<div class="slide" id="slide-21">
+  <div class="slide-inner">
+    <div class="eyebrow chapter">자주 묻는 질문</div>
+    <h2 class="section-title">FAQ</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">키가 유출되면 내 돈이 다 나가나요?</div>
+        <div class="faq-a">월 한도를 설정해 두면 그 이상은 청구되지 않습니다. 유출 즉시 키를 삭제하면 그 순간부터 차단됩니다. 한도 설정을 먼저 하는 게 중요합니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">LM Studio를 쓰면 성능이 많이 떨어지나요?</div>
+        <div class="faq-a">일상적인 텍스트 작업(글쓰기, 아이디어 정리, 번역)에는 충분합니다. 복잡한 코드 작성이나 깊은 분석은 클라우드 AI가 더 낫습니다. 처음엔 로컬로 감 잡고, 필요에 따라 클라우드로 이동하는 것을 추천합니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">키를 여러 BYOK 서비스에 같이 써도 되나요?</div>
+        <div class="faq-a">됩니다. 하나의 키를 여러 서비스에서 동시에 사용할 수 있습니다. 요금은 전체 사용량이 합산되어 청구됩니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Gemini 무료 티어는 얼마나 쓸 수 있나요?</div>
+        <div class="faq-a">Gemini Flash 무료 티어는 가볍게 쓰는 솔로프레너에게 충분한 양입니다. 정확한 한도는 Google AI Studio 콘솔에서 확인하세요 (변경될 수 있습니다). 단, 무료 티어는 구글이 내 요청을 모델 학습에 활용할 수 있습니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">브라우저를 바꾸면 키를 다시 입력해야 하나요?</div>
+        <div class="faq-a">네. BYOK 서비스의 키는 브라우저 localStorage에 저장되기 때문에, 다른 브라우저나 다른 기기에서는 다시 입력해야 합니다. 이건 보안상 의도된 설계입니다.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 22 — 권장 로드맵 ═══ -->
+<div class="slide" id="slide-22">
+  <div class="slide-inner">
+    <div class="eyebrow chapter">마무리</div>
+    <h2 class="section-title">오늘부터<br>이 순서로 시작하세요</h2>
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>LM Studio 설치 — 오늘 (0원, 10분)</h4>
+          <p>lmstudio.ai → 설치 → Llama 3.1 8B 다운로드 → WonGuardian에 연결. 비용 없이 BYOK 개념을 몸으로 익힙니다.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Gemini 무료 키 발급 — 이번 주 (0원, 5분)</h4>
+          <p>aistudio.google.com → 로그인 → API 키 발급. 무료 티어로 클라우드 AI 감을 잡습니다.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Claude Haiku 키 발급 — 익숙해지면 (소액)</h4>
+          <p>console.anthropic.com → $5 충전 → 키 발급. 긴 문서 분석이나 정교한 작업에 활용합니다.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>용도에 따라 모델 분리해서 쓰기</h4>
+          <p>초안·아이디어는 무료 또는 Haiku, 최종 검토는 Sonnet. 비용과 성능을 동시에 최적화합니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 23 — GNG 서비스 CTA ═══ -->
+<div class="slide" id="slide-23">
+  <div class="slide-inner">
+    <div class="eyebrow chapter">지금 바로 시작하기</div>
+    <h2 class="section-title">오늘 바로<br>시작할 수 있습니다</h2>
+    <p class="lead-text">키가 없어도 괜찮습니다. <strong>LM Studio로 먼저 무료 체험</strong>해 보세요.</p>
+    <div class="cta-box">
+      <h3>① LORITN — 아이디어 발견 도구</h3>
+      <p>내 경험과 강점에서 창업 아이디어를 발굴합니다. 완전 무료, BYOK 방식.</p>
+      <a class="cta-btn" href="https://loritn.mutrasite.com" target="_blank">LORITN 시작하기 →</a>
+    </div>
+    <div class="cta-box">
+      <h3>② Vibe2Spec AI — 아이디어 → 지시서</h3>
+      <p>아이디어 한 줄을 AI 개발 지시서로 변환합니다. BYOK 방식.</p>
+      <a class="cta-btn secondary" href="https://vibe2spec.mutrasite.com" target="_blank">Vibe2Spec 시작하기 →</a>
+    </div>
+    <div class="cta-box">
+      <h3>③ WonGuardian — 무료 AI 개발 파트너</h3>
+      <p>아이디어 검증부터 배포 전 점검까지. BYOK 또는 로컬 AI로 비용 없이 사용합니다.</p>
+      <a class="cta-btn secondary" href="https://wonguardian.mutrasite.com" target="_blank">WonGuardian 시작하기 →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 24 — 정리 ═══ -->
+<div class="slide" id="slide-24">
+  <div class="slide-inner">
+    <div class="eyebrow">정리</div>
+    <h2 class="section-title">오늘 가져갈 것</h2>
+    <div class="summary-grid">
+      <div class="summary-item">
+        <div class="s-num">하나</div>
+        <div class="s-title">BYOK = 내 키 직접 사용</div>
+        <div class="s-desc">Bring Your Own Key. 서비스에 구독료 내는 대신, AI사에 직접 사용료를 냅니다.</div>
+      </div>
+      <div class="summary-item">
+        <div class="s-num">둘</div>
+        <div class="s-title">비용·보안·선택권</div>
+        <div class="s-desc">비용 절감 + 데이터 보호 + 모델 선택권. 세 가지를 동시에 얻습니다.</div>
+      </div>
+      <div class="summary-item">
+        <div class="s-num">셋</div>
+        <div class="s-title">로컬 AI = 0원</div>
+        <div class="s-desc">LM Studio로 내 컴퓨터에서 실행. 인터넷 없이, 비용 없이, 영구 사용.</div>
+      </div>
+      <div class="summary-item">
+        <div class="s-num">넷</div>
+        <div class="s-title">Gemini 무료로 시작</div>
+        <div class="s-desc">aistudio.google.com에서 무료 키 발급. 돈 한 푼 없이 BYOK를 경험할 수 있습니다.</div>
+      </div>
+    </div>
+    <hr class="divider">
+    <p style="font-size: 13px; color: var(--text-muted); text-align: center;">
+      © 2026 HONUP Builder™<br>
+      다음 편 — BYOK 고급 활용: 모델별 용도 분리와 비용 최적화
+    </p>
+    <div style="text-align:center; margin-top: 24px;">
+      <a href="https://honupbuilder.mariacamp.com" style="display:inline-block;background:var(--text-primary);color:white;text-decoration:none;font-weight:700;font-size:14px;padding:12px 28px;border-radius:8px;">← HONUP Builder 홈으로</a>
+    </div>
+  </div>
+</div>
+
+<div class="nav-arrows">
+  <button class="arrow-btn" id="prevBtn" onclick="changePage(-1)" disabled>←</button>
+  <button class="arrow-btn" id="nextBtn" onclick="changePage(1)">→</button>
+</div>
+
+<script>
+  const TOTAL = 24;
+  let current = 1;
+
+  function showPage(n) {
+    document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+    document.getElementById('slide-' + n).classList.add('active');
+    document.getElementById('pageCounter').textContent = n + ' / ' + TOTAL;
+    document.getElementById('progressBar').style.width = (n / TOTAL * 100) + '%';
+    document.getElementById('prevBtn').disabled = n <= 1;
+    document.getElementById('nextBtn').disabled = n >= TOTAL;
+    window.scrollTo(0, 0);
+    current = n;
+  }
+
+  function changePage(dir) {
+    const next = current + dir;
+    if (next >= 1 && next <= TOTAL) showPage(next);
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changePage(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changePage(-1);
+  });
+
+  let touchX = 0;
+  document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const diff = touchX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) changePage(diff > 0 ? 1 : -1);
+  });
+
+  showPage(1);
+</script>
+
+</body>
+</html>
